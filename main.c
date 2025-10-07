@@ -83,19 +83,3 @@ int main(void) {
 
     return 0;
 }
-
-
-/*
-new vect
-vect name
-add
-sub
-dot
-cross
-scalar multiply
-
-list
-help - only spaces allowed, only certain operations
-clear
-quit
-*/
