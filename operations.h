@@ -25,6 +25,3 @@ int set_vect(char name[50], vect new_vect);
     // check for existing vect name
 
 #endif // OPERATIONS_H
-
-
-// ask turney about dot product return value - what to do with it
