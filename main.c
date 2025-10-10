@@ -49,8 +49,6 @@ int main(int argc, char *argv[]) {
     }
 
     while (1) {
-        char index0[50] = "", index1[50] = "", index2[50] = "", index3[50] = "", index4[50] = "";
-
         // scan input
         printf("minimat> ");
         fgets(input, sizeof(input), stdin);
@@ -62,7 +60,9 @@ int main(int argc, char *argv[]) {
                 input[i] = ' ';
             }
         } 
-        sscanf(input, "%s %s %s %s %s", index0, index1, index2, index3, index4);
+
+        char index0[50] = "", index1[50] = "", index2[50] = "", index3[50] = "", index4[50] = "", index5[50] = "";
+        sscanf(input, "%s %s %s %s %s %s", index0, index1, index2, index3, index4, index5);
 
         if (!strcmp(index0, "quit")) {
             return 0;
@@ -77,8 +77,24 @@ int main(int argc, char *argv[]) {
             list(vectors, vect_count);
             continue;
         }
-           
-        int vector_index = find_vect(vectors, index0, vect_count);
+
+        // check for invalid inputs
+        if (index5[0] != '\0') {
+            // extra input
+            printf("Error: Invalid command.\n");
+            continue;
+        } else if (index0[0] == '\0') {
+            // no input
+            printf("Error: No command entered.\n");
+            continue;
+        } else if (index0[0] != '\0' && !strcmp(index1, "=") && (index2[0] == '\0' || index3[0] == '\0' || index4[0] == '\0')) {
+            // invalid: a = 1 2, a = 1, a = b +
+            printf("Error: Invalid assignment.\n");
+            continue;
+        }
+
+        // check for existing vector
+        int vector_index = find_vect(vectors, index0, vect_count);                
         if (index1[0] == '\0') {
             // print a vector
             if (vector_index != -1) {
@@ -93,7 +109,6 @@ int main(int argc, char *argv[]) {
                 if (vect_count < SIZE) {
                     if (vector_index != -1) { // vect name already exists, update it
                         vectors[vector_index] = new_vect(index0, atof(index2), atof(index3), atof(index4));
-                        vect_count++;
                         continue;
                     }
                     vectors[vect_count++] = new_vect(index0, atof(index2), atof(index3), atof(index4));
@@ -107,30 +122,42 @@ int main(int argc, char *argv[]) {
                 vect temp;
                 if (index_a != -1 && index_b == -1) {
                     temp = scalar_vect(vectors[index_a], atof(index4));
+                } else if (index_a == -1 && index_b != -1) {
+                    temp = scalar_vect(vectors[index_b], atof(index2));
                 } else {
                     temp = perform_operation(vectors, index_a, index3, index_b);
                 }
                 if (temp.name == NULL && temp.x == 0 && temp.y == 0 && temp.z == 0) {
+                    printf("Error: Operation failed.\n");
+                    continue;
+                }
+                if (vector_index != -1) { // vect name already exists, update it
+                    vectors[vector_index] = new_vect(index0, temp.x, temp.y, temp.z);
                     continue;
                 }
                 vectors[vect_count++] = new_vect(index0, temp.x, temp.y, temp.z);
-            } 
+            }
         } else if (index1 != '\0') { // format: a + b
             int index_a = find_vect(vectors, index0, vect_count);
             int index_b = find_vect(vectors, index2, vect_count);
             vect temp;
             if (index_a != -1 && index_b == -1) {
                 temp = scalar_vect(vectors[index_a], atof(index2));
+            } else if (index_a == -1 && index_b != -1) {
+                temp = scalar_vect(vectors[index_b], atof(index0));
             } else {
                 temp = perform_operation(vectors, index_a, index1, index_b);
             }
             if (temp.name == NULL && temp.x == 0 && temp.y == 0 && temp.z == 0) {
+                printf("Error: Operation failed.\n");
                 continue;
             }
             char name[50] = "ans";
             print_vect(name, temp.x, temp.y, temp.z);
+        } else {
+            printf("Error: Invalid command.\n");
         }
-        printf("\n");
+
     }
 
     return 0;
