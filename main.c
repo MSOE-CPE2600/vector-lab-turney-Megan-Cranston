@@ -7,79 +7,168 @@
 * Assignment: Lab 5
 * Name: Megan Cranston
 *
-* compile: 
+* compile: gcc main.c operations.c commands.c -o vector_lab
 *
 * Algorithm:
-* - 
+* - Initialize vector storage
+* - Loop until user quits
+*   - Prompt user for input
+*   - Parse input into components
+*   - Determine command type (help, clear, list, quit, create vector, display vector, perform operation)
+*   - Execute command
+*   - Handle errors (invalid command, vector not found, storage full)
+* - End program
 */
 
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include "operations.h"
 #include "commands.h"
 #include "vectors.h"
 
+#define SIZE 10
 
-int main(void) {
+vect perform_operation(vect vectors[], int index_a, char operation[50], int index_b);
+int is_float(char str[]);
 
-    // -h for command input -----------------------------------------------------------
+int main(int argc, char *argv[]) {
 
-    char input[300];
+    // check for -h argument
+    if (argc > 1 && !strcmp(argv[1], "-h")) help();
+    
+    char input[256];
+    vect vectors[SIZE]; 
+    int vect_count = 0; // vector_indexber of stored vectors
 
-    while (strcmp(input, "quit")) {
+    for (int i = 0; i < SIZE; i++) {
+        vectors[i].name[0] = '\0';
+        vectors[i].x = 0;
+        vectors[i].y = 0;
+        vectors[i].z = 0;
+    }
+
+    while (1) {
+        char index0[50] = "", index1[50] = "", index2[50] = "", index3[50] = "", index4[50] = "";
+
         // scan input
         printf("minimat> ");
-        scanf("%s", input);
+        fgets(input, sizeof(input), stdin);
+        input[strcspn(input, "\n")] = 0;
 
-        char index0[50];
-        char index1[50];
-        char index2[50];
-        char index3[50];
-        char index4[50];
-
-        // parse input  --------------------------------------------------------- commas? 
+        // parse input, turn commas into spaces
+        for (int i = 0; input[i] != '\0'; i++) {
+            if (input[i] == ',') {
+                input[i] = ' ';
+            }
+        } 
         sscanf(input, "%s %s %s %s %s", index0, index1, index2, index3, index4);
 
-        // check return values for function success --------------------------------------------
-
-        if (!strcmp(index1, "\0")) {
-            // check input for commands
-            if (!strcmp(index0, "list")) {
-                list();
-            } else if (!strcmp(input0, "help")) {
-                help();
-            } else if (!strcmp(input0, "clear")) {
-                clear();
-            } else {
-                if (vect_name(input0) == 0) {           // input is an existing variable
-                    // print an error because vect_name returns 1 if successful -----------------------
-                } 
+        if (!strcmp(index0, "quit")) {
+            return 0;
+        } else if (!strcmp(index0, "help")) {
+            help();
+            continue;
+        } else if (!strcmp(index0, "clear")) {
+            clear(vectors, vect_count);
+            vect_count = 0;
+            continue;
+        } else if (!strcmp(index0, "list")) {
+            list(vectors, vect_count);
+            continue;
+        }
+           
+        int vector_index = find_vect(vectors, index0, vect_count);
+        if (index1[0] == '\0') {
+            // print a vector
+            if (vector_index != -1) {
+                print_vect(vectors[vector_index].name, vectors[vector_index].x, vectors[vector_index].y, vectors[vector_index].z);
+             } else {
+                printf("Error: Vector not found.\n");
+                continue;
             }
-        } else if (!strcmp(index1, "=")) {              // math with new vect assignment
-            if (!strcmp(index3, "+")) {
-                set_vect(index0, add_vect(index2, index4));
-            } else if (!strcmp(index3, "-")) {
-                set_vect(index0, sub_vect(index2, index4));
-            } else if (!strcmp(index3, ".")) {
-                set_vect(index0, dot_vect(index2, index4));
-            } else if (!strcmp(index3, "*")) {
-                set_vect(index0, cross_vect(index2, index4));
+        } else if (!strcmp(index1, "=")){
+            if (is_float(index2) && is_float(index3) && is_float(index4)) {
+                // create new vector
+                if (vect_count < SIZE) {
+                    if (vector_index != -1) { // vect name already exists, update it
+                        vectors[vector_index] = new_vect(index0, atof(index2), atof(index3), atof(index4));
+                        vect_count++;
+                        continue;
+                    }
+                    vectors[vect_count++] = new_vect(index0, atof(index2), atof(index3), atof(index4));
+                } else {
+                    printf("Error: Vector storage full.\n");
+                    continue;
+                }
+            } else if (index3 != '\0') { // format: a = b + c
+                int index_a = find_vect(vectors, index2, vect_count);
+                int index_b = find_vect(vectors, index4, vect_count);
+                vect temp;
+                if (index_a != -1 && index_b == -1) {
+                    temp = scalar_vect(vectors[index_a], atof(index4));
+                } else {
+                    temp = perform_operation(vectors, index_a, index3, index_b);
+                }
+                if (temp.name == NULL && temp.x == 0 && temp.y == 0 && temp.z == 0) {
+                    continue;
+                }
+                vectors[vect_count++] = new_vect(index0, temp.x, temp.y, temp.z);
+            } 
+        } else if (index1 != '\0') { // format: a + b
+            int index_a = find_vect(vectors, index0, vect_count);
+            int index_b = find_vect(vectors, index2, vect_count);
+            vect temp;
+            if (index_a != -1 && index_b == -1) {
+                temp = scalar_vect(vectors[index_a], atof(index2));
             } else {
-                new_vect(index0, index2, index3, index4);
+                temp = perform_operation(vectors, index_a, index1, index_b);
             }
-        } else if (!strcmp(index1, "+")) {              // math with no new vect assignment
-            add_vect(index0, index2);
-        } else if (!strcmp(index1, "-")) {
-            sub_vect(index0, index2);
-        } else if (!strcmp(index1, ".")) {
-            dot_vect(index0, index2);
-        } else if (!strcmp(index1, "*")) {
-            cross_vect(index0, index2);
-        } 
-
-        // error handling
-
-
+            if (temp.name == NULL && temp.x == 0 && temp.y == 0 && temp.z == 0) {
+                continue;
+            }
+            char name[50] = "ans";
+            print_vect(name, temp.x, temp.y, temp.z);
+        }
+        printf("\n");
     }
 
     return 0;
+}
+
+/*
+* @brief Perform the specified operation on two vectors
+* @param vectors - The array of stored vectors
+* @param index_a - The index of the first vector
+* @param operation - The operation to perform
+* @param index_b - The index of the second vector
+* @return vect - The result of the operation
+*/
+vect perform_operation(vect vectors[], int index_a, char operation[50], int index_b) {
+    if (!strcmp(operation, "+")) {
+        return add_vect(vectors[index_a], vectors[index_b]);
+    } else if (!strcmp(operation, "-")) {
+        return sub_vect(vectors[index_a], vectors[index_b]);
+    } else if (!strcmp(operation, ".")) {
+        return dot_vect(vectors[index_a], vectors[index_b]);
+    } else if (!strcmp(operation, "*")) {
+        return cross_vect(vectors[index_a], vectors[index_b]);
+    } else {
+        printf("Error: Invalid operation.\n");
+        return new_vect(NULL, 0, 0, 0);
+    }
+}
+
+/*
+* @brief Check if a string is a valid float 
+* @param str - The string to check
+* @return 1 if the string is a valid float, 0 otherwise
+*/
+int is_float(char str[]) {
+    if (str == NULL || str[0] == '\0') return 0;
+
+    char *endptr;
+    strtof(str, &endptr);
+
+    return (*endptr == '\0') ? 1 : 0;
 }
