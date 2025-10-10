@@ -88,7 +88,11 @@ int main(int argc, char *argv[]) {
             // invalid: 1 + a (operation other than scalar)
             printf("Error: Invalid command.\n");
             continue;
-        }
+        } else if (!strcmp(index1, "=") && ((!is_float(index2) && find_vect(vectors, index2, SIZE) == -1) || (!is_float(index4) && find_vect(vectors, index4, SIZE) == -1))) {
+            // invalid: vector not found
+            printf("Error: Vector not found.\n");
+            continue;
+        } 
 
         // check for existing vector
         int vector_index = find_vect(vectors, index0, vect_count);                
