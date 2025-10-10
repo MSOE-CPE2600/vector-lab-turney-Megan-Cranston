@@ -39,14 +39,7 @@ int main(int argc, char *argv[]) {
     
     char input[256];
     vect vectors[SIZE]; 
-    int vect_count = 0; // vector_indexber of stored vectors
-
-    for (int i = 0; i < SIZE; i++) {
-        vectors[i].name[0] = '\0';
-        vectors[i].x = 0;
-        vectors[i].y = 0;
-        vectors[i].z = 0;
-    }
+    int vect_count = 0;
 
     while (1) {
         // scan input
@@ -81,15 +74,19 @@ int main(int argc, char *argv[]) {
         // check for invalid inputs
         if (index5[0] != '\0') {
             // extra input
-            printf("Error: Invalid command.\n");
+            printf("Error: Extra input entered.\n");
             continue;
         } else if (index0[0] == '\0') {
             // no input
-            printf("Error: No command entered.\n");
+            printf("Error: No input entered.\n");
             continue;
         } else if (index0[0] != '\0' && !strcmp(index1, "=") && (index2[0] == '\0' || index3[0] == '\0' || index4[0] == '\0')) {
             // invalid: a = 1 2, a = 1, a = b +
             printf("Error: Invalid assignment.\n");
+            continue;
+        } else if ((is_float(index0) || is_float(index2)) && strcmp(index1, "*") != 0 && strcmp(index1, "=") != 0) {
+            // invalid: 1 + a (operation other than scalar)
+            printf("Error: Invalid command.\n");
             continue;
         }
 
@@ -120,15 +117,15 @@ int main(int argc, char *argv[]) {
                 int index_a = find_vect(vectors, index2, vect_count);
                 int index_b = find_vect(vectors, index4, vect_count);
                 vect temp;
-                if (index_a != -1 && index_b == -1) {
+                if (index_a != -1 && index_b == -1) {       // a = b * 2
                     temp = scalar_vect(vectors[index_a], atof(index4));
-                } else if (index_a == -1 && index_b != -1) {
+                } else if (index_a == -1 && index_b != -1) { // a = 2 * b
                     temp = scalar_vect(vectors[index_b], atof(index2));
-                } else {
+                } else {                                    // not scalar
                     temp = perform_operation(vectors, index_a, index3, index_b);
                 }
                 if (temp.name == NULL && temp.x == 0 && temp.y == 0 && temp.z == 0) {
-                    printf("Error: Operation failed.\n");
+                    printf("Error: Invalid operation.\n");
                     continue;
                 }
                 if (vector_index != -1) { // vect name already exists, update it
@@ -141,15 +138,15 @@ int main(int argc, char *argv[]) {
             int index_a = find_vect(vectors, index0, vect_count);
             int index_b = find_vect(vectors, index2, vect_count);
             vect temp;
-            if (index_a != -1 && index_b == -1) {
+            if (index_a != -1 && index_b == -1) {           // a * 2
                 temp = scalar_vect(vectors[index_a], atof(index2));
-            } else if (index_a == -1 && index_b != -1) {
+            } else if (index_a == -1 && index_b != -1) {    // 2 * a
                 temp = scalar_vect(vectors[index_b], atof(index0));
-            } else {
+            } else {                                        // not scalar    
                 temp = perform_operation(vectors, index_a, index1, index_b);
             }
             if (temp.name == NULL && temp.x == 0 && temp.y == 0 && temp.z == 0) {
-                printf("Error: Operation failed.\n");
+                printf("Error: Invalid operation.\n");
                 continue;
             }
             char name[50] = "ans";
@@ -180,8 +177,7 @@ vect perform_operation(vect vectors[], int index_a, char operation[50], int inde
         return dot_vect(vectors[index_a], vectors[index_b]);
     } else if (!strcmp(operation, "*")) {
         return cross_vect(vectors[index_a], vectors[index_b]);
-    } else {
-        printf("Error: Invalid operation.\n");
+    } else { // invalid operation
         return new_vect(NULL, 0, 0, 0);
     }
 }
