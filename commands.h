@@ -11,8 +11,8 @@
 #ifndef COMMANDS_H
 #define COMMANDS_H
 
-void help(); // help - only spaces allowed, only certain operations
-void clear();
-void quit();
+void help();
+void clear(vect vectors[], int vect_count);
+void list(vect vectors[], int vect_count);
 
 #endif // COMMANDS_H

@@ -46,14 +46,27 @@ void help() {
 
 /*
 * @brief Clear all stored vectors
+* @param vectors - The array of stored vectors
+* @param vect_count - The number of stored vectors
 */
-void clear() {
-
+void clear(vect vectors[], int vect_count) {
+    for (int i = 0; i < vect_count; i++) {
+        vectors[i].name[0] = '\0';
+        vectors[i].x = 0;
+        vectors[i].y = 0;
+        vectors[i].z = 0;
+    }
+    printf("All stored vectors cleared.\n");
 }
 
 /*
-* @brief Quit the program
+* @brief List all stored vectors
+* @param vectors - The array of stored vectors
+* @param vect_count - The number of stored vectors
 */
-void quit() {
-
+void list(vect vectors[], int vect_count) {
+    printf("Stored vectors:\n");
+    for (int i = 0; i < vect_count; i++) {
+        printf("\t%s: %.2f, %.2f, %.2f\n", vectors[i].name, vectors[i].x, vectors[i].y, vectors[i].z);
+    }
 }
