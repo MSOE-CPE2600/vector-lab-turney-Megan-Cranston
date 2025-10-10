@@ -13,45 +13,96 @@
 #include "vectors.h"
 
 
-vect vectors[10];
+/*
+* @brief Create a new vector
+* @param name - The name of the vector
+* @param x - The x component of the vector
+* @param y - The y component of the vector
+* @param z - The z component of the vector
+* @return 1 on success, 0 on failure
+*/
+int new_vect(char name[50], char x[50], char y[50], char z[50]) {
 
+}
 
 /*
-Addition: var1 + var2 - this expression will display the sum of the two supplied
-vectors. The vectors must exist or an error message should be
-displayed. 
+* @brief Check if a vector with the given name exists
+* @param name - The name of the vector to check
+* @return 1 if the vector exists, 0 otherwise
 */
-
+int vect_name(char name[50]) {
+    // for (int i = 0; i < 10; i++) {
+    //     if (!strcmp(name, vectors[i].name)) {
+    //         // print vect
+    //     }
+    // }
+}
 
 /*
-Subtraction: var1 - var2 - this expression will display the difference of the two
-supplied vectors. The vectors must exist or an error message should be
-displayed. 
+* @brief Add two vectors
+* @param name_a - The name of the first vector
+* @param name_b - The name of the second vector
+* @return The resulting vector
 */
+vect add_vect(vect name_a, vect name_b) {
+
+}
 
 /*
-Scalar Multiplication: var1 * num or num * var1 - this expression will display the
-vector scalar multiplied by num which may be any valid value afforded by floating
-point numbers (double). The vector must exist or an error message should be
-displayed.
+* @brief Subtract two vectors
+* @param name_a - The name of the first vector
+* @param name_b - The name of the second vector
+* @return The resulting vector
 */
+vect sub_vect(vect name_a, vect name_b) {
 
+}
 
 /*
-Operation plus assignment: result = var1 + var2 - performs the operation
-indicated (addition, subtraction, or scalar multiplication) and assigns the result to
-indicated result vector. If the result vector does not exist it will be created and if
-there is no room a message will be displayed. If the result vector exists, it will be
-replaced with the new values. In any case, the result of the operation should also
-be displayed.
+* @brief Dot product of two vectors
+* @param name_a - The name of the first vector
+* @param name_b - The name of the second vector
+* @return The dot product of the two vectors
 */
+float dot_vect(vect name_a, vect name_b) {
 
+}
 
-
-/* vect_name
-for (int i = 0; i < 10; i++) {
-                    if (!strcmp(index1, vects[i].name)) { // ------------ vects doesnt exist
-                        // print vect
-                    }
-                }
+/*
+* @brief Cross product of two vectors
+* @param name_a - The name of the first vector
+* @param name_b - The name of the second vector
+* @return The cross product of the two vectors
 */
+vect cross_vect(vect name_a, vect name_b) {
+
+}
+
+/*
+* @brief Scale a vector
+* @param name - The name of the vector
+* @param scalar - The scalar value
+* @return The scaled vector
+*/
+vect scalar_vect(vect name, float scalar) {
+
+}
+
+/*
+* @brief Set the components of an existing vector
+* @param name - The name of the existing vector
+* @param new_vect - The new vector components
+* @return 1 on success, 0 on failure
+*/
+int set_vect(char name[50], vect new_vect) {
+
+}
+
+/*
+* @brief Print the components of a vector
+* @param name - The name of the vector to print
+* @return 1 on success, 0 on failure
+*/
+int print_vect(vect name) {
+
+}
