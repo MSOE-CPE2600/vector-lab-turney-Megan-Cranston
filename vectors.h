@@ -12,7 +12,7 @@
 #define VECTORS_H
 
 typedef struct vect {
-    char name[30];
+    char name[50];
     float x;
     float y;
     float z;
