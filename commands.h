@@ -12,7 +12,7 @@
 #define COMMANDS_H
 
 void help();
-void clear(vect vectors[], int vect_count);
-void list(vect vectors[], int vect_count);
+void clear(vect *vectors, int *count, int *CAP);
+void list(vect *vectors, int count);
 
 #endif // COMMANDS_H

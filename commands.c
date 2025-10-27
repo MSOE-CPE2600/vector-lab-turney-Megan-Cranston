@@ -39,6 +39,8 @@ void help() {
     printf("\nMiscellaneous operations:\n");
     printf("\tlist\t\t\t\tList all stored vectors\n");
     printf("\tclear\t\t\t\tClear all stored vectors\n");
+    printf("\tload <filename>\t\t\tLoad vectors from file\n");
+    printf("\tsave <filename>\t\t\tSave vectors to a file\n");
     printf("\tquit\t\t\t\tExit the program\n");
 
     printf("\nNote: Only spaces and commas are allowed as separators in commands\n\n");
@@ -47,26 +49,29 @@ void help() {
 /*
 * @brief Clear all stored vectors
 * @param vectors - The array of stored vectors
-* @param vect_count - The number of stored vectors
+* @param count - The number of stored vectors
+* @param CAP - The total capacity of vectors
 */
-void clear(vect vectors[], int vect_count) {
-    for (int i = 0; i < vect_count; i++) {
+void clear(vect *vectors, int *count, int *CAP) {
+    for (int i = 0; i < *count; i++) {
         vectors[i].name[0] = '\0';
         vectors[i].x = 0;
         vectors[i].y = 0;
         vectors[i].z = 0;
     }
+    *count = 0;
+    *CAP = 10;
     printf("All stored vectors cleared.\n");
 }
 
 /*
 * @brief List all stored vectors
 * @param vectors - The array of stored vectors
-* @param vect_count - The number of stored vectors
+* @param count - The number of stored vectors
 */
-void list(vect vectors[], int vect_count) {
+void list(vect *vectors, int count) {
     printf("Stored vectors:\n");
-    for (int i = 0; i < vect_count; i++) {
+    for (int i = 0; i < count; i++) {
         printf("\t%s: %.2f, %.2f, %.2f\n", vectors[i].name, vectors[i].x, vectors[i].y, vectors[i].z);
     }
 }
