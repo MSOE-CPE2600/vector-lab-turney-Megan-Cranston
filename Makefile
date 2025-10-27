@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-c
 LDFLAGS=
-SOURCES=main.c operations.c commands.c
+SOURCES=main.c logic.c fileio.c operations.c commands.c
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE=vector_lab
 
