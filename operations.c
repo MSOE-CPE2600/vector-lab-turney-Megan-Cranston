@@ -20,7 +20,7 @@
 * @param x - The x component of the vector
 * @param y - The y component of the vector
 * @param z - The z component of the vector
-* @return 1 on success, 0 on failure
+* @return new vector
 */
 vect new_vect(char name[50], float x, float y, float z) {
     vect temp;
@@ -35,12 +35,13 @@ vect new_vect(char name[50], float x, float y, float z) {
 
 /*
 * @brief Check if a vector with the given name exists
-* @param name - The name of the vector to check
 * @param vectors - The array of vectors to search
-* @return 1 if the vector exists, -1 otherwise
+* @param name - The name of the vector to check
+* @param count - The number of stored vectors
+* @return index if the vector exists, -1 otherwise
 */
-int find_vect(vect vectors[], char name[50], int size) {
-    for (int i = 0; i < size; i++) {
+int find_vect(vect vectors[], char name[50], int count) {
+    for (int i = 0; i < count; i++) {
         if (!strcmp(name, vectors[i].name)) {
             return i;
         }

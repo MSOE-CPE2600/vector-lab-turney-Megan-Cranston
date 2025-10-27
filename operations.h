@@ -13,9 +13,8 @@
 #ifndef OPERATIONS_H
 #define OPERATIONS_H
 
-// return 0 if unsuccessful, 1 if successful
 vect new_vect(char name[50], float x, float y, float z);
-int find_vect(vect vectors[], char name[50], int size);
+int find_vect(vect vectors[], char name[50], int count);
 vect add_vect(vect a, vect b);
 vect sub_vect(vect a, vect b);
 vect dot_vect(vect a, vect b);
